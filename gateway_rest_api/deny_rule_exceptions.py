@@ -4,6 +4,8 @@
 This Python script interacts with Airlock Gateway's REST API for managing the configuration of deny rule groups.
 It enables the addition, deletion, and listing of exceptions for deny rule groups through command-line options.
 
+Tested with Airlock Gateway verions 8.3 and 8.4.
+
 **Requirements**
 
 The script uses a Python library for interacting with Airlock Gateway's REST API. This library is available at
@@ -319,10 +321,6 @@ def main():
 
     register_cleanup_handler()
 
-    gw_version = al.get_version(SESSION)
-    if gw_version != "8.1":
-        terminate_with_error(f"Gateway version {gw_version} is not supported. Please use version 8.1")
-
     # Makes sure the loaded configuration matches the currently active one.
     al.load_active_config(SESSION)
 
@@ -346,11 +344,6 @@ def main():
     else:
         print("Saving configuration...")
         al.save_config(SESSION, f"{args.comment}")
-
-    # This line doesn't do anything as we never activated any config,
-    # but in general this is how you restore the backup that you stored
-    # at the beginning of the script.
-    # al.import_config(session, "./config.zip")
 
     al.terminate_session(SESSION)
 
